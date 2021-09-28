@@ -1,0 +1,32 @@
+CREATE TABLE quadbike (
+ID NUMBER(10) NOT NULL,
+Brand VARCHAR2(20) NULL,
+Model NUMBER(10) NULL,
+Category_ID NUMBER(10) NULL,
+NAME VARCHAR2(4000) NULL,
+PRIMARY KEY (ID));
+--id increment
+CREATE OR REPLACE TRIGGER quadbike_seq_tr
+BEFORE INSERT ON quadbike FOR EACH ROW
+WHEN (NEW.ID IS NULL)
+BEGIN
+SELECT quadbike_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+END; 
+
+
+BEGIN
+    INSERT INTO quadbike(ID,BRAND,MODEL,CATEGORY_ID,NAME) VALUES
+(:id, :brand, :model, :category_id,:name);
+:status_code:=201;
+END;
+
+BEGIN
+    UPDATE QUADBIKE SET BRAND=:brand,MODEL=:model,
+CATEGORY_ID=:category_id,NAME=:name where ID=:id;
+:status_code:=201;
+END;
+
+BEGIN
+    DELETE FROM QUADBIKE WHERE ID=:id;
+:status_code:=204;
+END;
